@@ -1,20 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop/models/product_lista.dart';
+import 'package:shop/models/product_list.dart';
+import 'package:shop/util/app_routes.dart';
+import '../components/badge.dart';
 import '../components/productGrid.dart';
+import '../models/cart.dart';
 
-
- enum FilterOptions{
+enum FilterOptions {
   favorite,
   all,
 }
 
-class ProductOverviewScreen extends StatelessWidget {
+class ProductOverviewScreen extends StatefulWidget {
   ProductOverviewScreen({super.key});
 
   @override
+  State<ProductOverviewScreen> createState() => _ProductOverviewScreenState();
+}
+
+class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
+  bool _showFavoriteOnly = false;
+
+  @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<ProductList>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Minha loja'),
@@ -32,18 +40,31 @@ class ProductOverviewScreen extends StatelessWidget {
                 value: FilterOptions.all,
               ),
             ],
-            onSelected: (FilterOptions selectedValue){
-              if(selectedValue == FilterOptions.favorite){
-                provider.showFavoriteOnly();
-              }
-              else{
-                provider.showAll();
-              }
+            onSelected: (FilterOptions selectedValue) {
+              setState(() {
+                if (selectedValue == FilterOptions.favorite) {
+                  _showFavoriteOnly = true;
+                } else {
+                  _showFavoriteOnly = false;
+                }
+              });
             },
+          ),
+          Consumer<Cart>(
+            child: IconButton(
+                onPressed: (){
+                  Navigator.of(context).pushNamed(AppRoutes.CART);
+                },
+                icon: Icon(Icons.shopping_cart),
+            ),
+            builder: (ctx, cart,child) => myBadge(
+              value: cart.itemsCount.toString(),
+              child: child!,
+            ),
           )
         ],
       ),
-      body: ProductGrid(),
+      body: ProductGrid(_showFavoriteOnly),
     );
   }
 }
