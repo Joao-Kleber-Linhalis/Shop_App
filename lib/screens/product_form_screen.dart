@@ -1,7 +1,6 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:shop/models/product.dart';
+import 'package:provider/provider.dart';
+import 'package:shop/models/product_list.dart';
 
 class ProductFormScreen extends StatefulWidget {
   const ProductFormScreen({super.key});
@@ -54,26 +53,24 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     }
 
     _formKey.currentState?.save();
-    final newProduct = Product(
-      id: Random().nextDouble().toString(),
-      title: _formData['name'] as String,
-      description: _formData['description'] as String,
-      price: _formData['price'] as double,
-      imageUrl: _formData['imageURL'] as String,
-    );
+
+    Provider.of<ProductList>(context, listen: false)
+        .addProductFromData(_formData);
+
+    Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Formulário de Produto"),
+        title: const Text("Formulário de Produto"),
         backgroundColor: Theme.of(context).colorScheme.primary,
         centerTitle: true,
         actions: [
           IconButton(
             onPressed: _submitForm,
-            icon: Icon(Icons.save),
+            icon: const Icon(Icons.save),
           )
         ],
       ),
@@ -121,7 +118,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                     ),
                   ),
                 ),
-                keyboardType: TextInputType.numberWithOptions(
+                keyboardType: const TextInputType.numberWithOptions(
                   decimal: true,
                 ),
                 focusNode: _priceFocus,
@@ -210,7 +207,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                     ),
                     alignment: Alignment.center,
                     child: _imageURLController.text.isEmpty
-                        ? Text("Informe a URL")
+                        ? const Text("Informe a URL")
                         : FittedBox(
                             child: Image.network(_imageURLController.text),
                             fit: BoxFit.cover,
