@@ -38,10 +38,18 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     setState(() {});
   }
 
+  bool isValidImageUrl(String url) {
+    bool isValidUrl = Uri.tryParse(url)?.hasAbsolutePath ?? false;
+    bool endsWithFile = url.toLowerCase().endsWith('.png') ||
+        url.toLowerCase().endsWith('.jpg') ||
+        url.toLowerCase().endsWith('.jpeg');
+    return isValidUrl && endsWithFile;
+  }
+
   void _submitForm() {
     final isValid = _formKey.currentState?.validate() ?? false;
 
-    if(!isValid){
+    if (!isValid) {
       return;
     }
 
@@ -50,7 +58,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
       id: Random().nextDouble().toString(),
       title: _formData['name'] as String,
       description: _formData['description'] as String,
-      price: _formData['price'] as double ,
+      price: _formData['price'] as double,
       imageUrl: _formData['imageURL'] as String,
     );
   }
@@ -76,27 +84,43 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
           child: ListView(
             children: [
               TextFormField(
-                decoration: InputDecoration(labelText: "Nome"),
+                decoration: InputDecoration(
+                  labelText: "Nome",
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.primary,
+                      width: 2.0,
+                    ),
+                  ),
+                ),
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_priceFocus);
                 },
                 onSaved: (name) => _formData['name'] = name ?? '',
-                validator: (_name){
+                validator: (_name) {
                   final name = _name ?? '';
 
-                  if(name.trim().isEmpty){
+                  if (name.trim().isEmpty) {
                     return "Nome é obrigatório";
                   }
 
-                  if(name.trim().length<3){
+                  if (name.trim().length < 3) {
                     return "Nome precisa ter no mínimo de 3 letras";
                   }
                   return null;
                 },
               ),
               TextFormField(
-                decoration: InputDecoration(labelText: "Preço"),
+                decoration: InputDecoration(
+                  labelText: "Preço",
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.primary,
+                      width: 2.0,
+                    ),
+                  ),
+                ),
                 keyboardType: TextInputType.numberWithOptions(
                   decimal: true,
                 ),
@@ -107,27 +131,72 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                 },
                 onSaved: (price) =>
                     _formData['price'] = double.parse(price ?? '0'),
+                validator: (_price) {
+                  final priceString = _price ?? "";
+                  final price = double.tryParse(priceString) ?? -1;
+                  if (price <= 0) {
+                    return "Informe um preço válido!";
+                  }
+                  return null;
+                },
               ),
               TextFormField(
-                  decoration: InputDecoration(labelText: "Descrição"),
-                  focusNode: _descriptionFocus,
-                  keyboardType: TextInputType.multiline,
-                  maxLines: 3,
-                  onSaved: (description) =>
-                      _formData['description'] = description ?? ''),
+                decoration: InputDecoration(
+                  labelText: "Descrição",
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.primary,
+                      width: 2.0,
+                    ),
+                  ),
+                ),
+                focusNode: _descriptionFocus,
+                keyboardType: TextInputType.multiline,
+                maxLines: 3,
+                onSaved: (description) =>
+                    _formData['description'] = description ?? '',
+                validator: (_description) {
+                  final description = _description ?? '';
+
+                  if (description.trim().isEmpty) {
+                    return "Descrição é obrigatório";
+                  }
+
+                  if (description.trim().length < 10) {
+                    return "Descrição precisa ter no mínimo de 10 letras";
+                  }
+                  return null;
+                },
+              ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Expanded(
                     child: TextFormField(
-                        decoration: InputDecoration(labelText: "URL da Imagem"),
-                        focusNode: _imageURLFocus,
-                        keyboardType: TextInputType.url,
-                        textInputAction: TextInputAction.done,
-                        controller: _imageURLController,
-                        onFieldSubmitted: (_) => _submitForm(),
-                        onSaved: (imageURL) =>
-                            _formData['imageURL'] = imageURL ?? ''),
+                      decoration: InputDecoration(
+                        labelText: "URL da Imagem",
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.primary,
+                            width: 2.0,
+                          ),
+                        ),
+                      ),
+                      focusNode: _imageURLFocus,
+                      keyboardType: TextInputType.url,
+                      textInputAction: TextInputAction.done,
+                      controller: _imageURLController,
+                      onFieldSubmitted: (_) => _submitForm(),
+                      onSaved: (imageURL) =>
+                          _formData['imageURL'] = imageURL ?? '',
+                      validator: (_imageURL) {
+                        final imageUrl = _imageURL ?? "";
+                        if (!isValidImageUrl(imageUrl)) {
+                          return "Informe uma URL válida!";
+                        }
+                        return null;
+                      },
+                    ),
                   ),
                   Container(
                     height: 100,
