@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop/models/product_list.dart';
+import 'package:shop/components/app_drawer.dart';
 import 'package:shop/util/app_routes.dart';
 import '../components/badge.dart';
-import '../components/productGrid.dart';
+import '../components/product_grid.dart';
 import '../models/cart.dart';
 
 enum FilterOptions {
@@ -26,6 +26,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Minha loja'),
+        backgroundColor: Theme.of(context).colorScheme.primary,
         centerTitle: true,
         actions: [
           PopupMenuButton(
@@ -65,6 +66,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
         ],
       ),
       body: ProductGrid(_showFavoriteOnly),
+      drawer: AppDrawer(),
     );
   }
 }
