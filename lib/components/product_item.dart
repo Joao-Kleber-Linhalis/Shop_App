@@ -29,7 +29,7 @@ class ProductItem extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    "Deseja realmente excluir o produto ${product.title}?",
+                    "Deseja realmente excluir o produto ${product.name}?",
                     textAlign: TextAlign.center,
                     style: const TextStyle(fontSize: 20),
                   ),
@@ -76,7 +76,7 @@ class ProductItem extends StatelessWidget {
       leading: CircleAvatar(
         backgroundImage: NetworkImage(product.imageUrl),
       ),
-      title: Text(product.title),
+      title: Text(product.name),
       trailing: Container(
         width: 100,
         child: Row(

@@ -35,7 +35,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
       if(arg != null){
         final product = arg as Product;
         _formData['id'] = product.id;
-        _formData['name'] = product.title;
+        _formData['name'] = product.name;
         _formData['price'] = product.price;
         _formData['description'] = product.description;
         _formData['imageUrl'] = product.imageUrl;
@@ -232,10 +232,14 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                     alignment: Alignment.center,
                     child: _imageURLController.text.isEmpty
                         ? const Text("Informe a URL")
-                        : FittedBox(
-                            child: Image.network(_imageURLController.text),
-                            fit: BoxFit.cover,
-                          ),
+                        : Container(
+                          width: 100,
+                          height: 100,
+                          child: FittedBox(
+                              child: Image.network(_imageURLController.text),
+                              fit: BoxFit.cover,
+                            ),
+                        ),
                   )
                 ],
               ),

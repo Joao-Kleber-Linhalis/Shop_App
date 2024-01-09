@@ -16,7 +16,7 @@ class ProductGridItem extends StatelessWidget {
         footer: GridTileBar(
           title: FittedBox(
             child: Text(
-              product.title,
+              product.name,
               textAlign: TextAlign.center,
             ),
           ),
