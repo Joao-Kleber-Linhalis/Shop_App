@@ -20,7 +20,7 @@ class ProductItem extends StatelessWidget {
           builder: (context) {
             return AlertDialog(
               backgroundColor: Colors.white,
-              title: Text(
+              title: const Text(
                 "Exclusão de Produto",
                 textAlign: TextAlign.center,
               ),
@@ -31,16 +31,16 @@ class ProductItem extends StatelessWidget {
                   Text(
                     "Deseja realmente excluir o produto ${product.title}?",
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 20),
+                    style: const TextStyle(fontSize: 20),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       TextButton(
-                        child: Text(
+                        child: const Text(
                           "Sim",
                           style: TextStyle(
                             fontSize: 20,
@@ -53,7 +53,7 @@ class ProductItem extends StatelessWidget {
                         },
                       ),
                       TextButton(
-                        child: Text(
+                        child: const Text(
                           "Não",
                           style: TextStyle(
                             fontSize: 20,
