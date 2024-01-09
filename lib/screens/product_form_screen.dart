@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop/models/product.dart';
 import 'package:shop/models/product_list.dart';
 
 class ProductFormScreen extends StatefulWidget {
@@ -22,6 +23,26 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   void initState() {
     super.initState();
     _imageURLFocus.addListener(updateImage);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if(_formData.isEmpty){
+      final arg = ModalRoute.of(context)?.settings.arguments;
+
+      if(arg != null){
+        final product = arg as Product;
+        _formData['id'] = product.id;
+        _formData['name'] = product.title;
+        _formData['price'] = product.price;
+        _formData['description'] = product.description;
+        _formData['imageUrl'] = product.imageUrl;
+
+        _imageURLController.text = product.imageUrl;
+      }
+    }
   }
 
   @override
@@ -55,7 +76,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     _formKey.currentState?.save();
 
     Provider.of<ProductList>(context, listen: false)
-        .addProductFromData(_formData);
+        .saveProductFromData(_formData);
 
     Navigator.of(context).pop();
   }
@@ -81,6 +102,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
           child: ListView(
             children: [
               TextFormField(
+                initialValue: _formData['name']?.toString(),
                 decoration: InputDecoration(
                   labelText: "Nome",
                   enabledBorder: UnderlineInputBorder(
@@ -109,6 +131,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                 },
               ),
               TextFormField(
+                initialValue: _formData['price']?.toString(),
                 decoration: InputDecoration(
                   labelText: "Preço",
                   enabledBorder: UnderlineInputBorder(
@@ -138,6 +161,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                 },
               ),
               TextFormField(
+                initialValue: _formData['description']?.toString(),
                 decoration: InputDecoration(
                   labelText: "Descrição",
                   enabledBorder: UnderlineInputBorder(
@@ -185,7 +209,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                       controller: _imageURLController,
                       onFieldSubmitted: (_) => _submitForm(),
                       onSaved: (imageURL) =>
-                          _formData['imageURL'] = imageURL ?? '',
+                          _formData['imageUrl'] = imageURL ?? '',
                       validator: (_imageURL) {
                         final imageUrl = _imageURL ?? "";
                         if (!isValidImageUrl(imageUrl)) {
