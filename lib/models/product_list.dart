@@ -47,6 +47,11 @@ class ProductList with ChangeNotifier {
     }
   }
 
+  void deleteProduct(Product product){
+      _items.removeWhere((p) => p == product);
+      notifyListeners();
+  }
+
   // bool _showFavoriteOnly = false;
 
   // List<Product> get items {

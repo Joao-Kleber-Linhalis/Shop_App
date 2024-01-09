@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shop/models/product.dart';
+import 'package:shop/models/product_list.dart';
 import 'package:shop/util/app_routes.dart';
 
 class ProductItem extends StatelessWidget {
@@ -8,6 +10,68 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void _deleteProduct() {
+      Provider.of<ProductList>(context, listen: false).deleteProduct(product);
+    }
+
+    void showConfirmDialog() {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              backgroundColor: Colors.white,
+              title: Text(
+                "Exclusão de Produto",
+                textAlign: TextAlign.center,
+              ),
+              content: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "Deseja realmente excluir o produto ${product.title}?",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      TextButton(
+                        child: Text(
+                          "Sim",
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.green,
+                          ),
+                        ),
+                        onPressed: () {
+                          _deleteProduct();
+                          Navigator.pop(context);
+                        },
+                      ),
+                      TextButton(
+                        child: Text(
+                          "Não",
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.red,
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            );
+          });
+    }
+
     return ListTile(
       leading: CircleAvatar(
         backgroundImage: NetworkImage(product.imageUrl),
@@ -37,7 +101,9 @@ class ProductItem extends StatelessWidget {
                 Icons.delete,
               ),
               color: Theme.of(context).colorScheme.error,
-              onPressed: (() {}),
+              onPressed: (() {
+                showConfirmDialog();
+              }),
             ),
           ],
         ),
