@@ -7,7 +7,7 @@ final dummyProducts = [
       description: 'A red shirt - it is pretty red!',
       price: 29.99,
       imageUrl:
-          'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShycF26oD6CrgE1T13isfbFvdXi1NDl9yQjPDT7pIdDw&s',
     ),
     Product(
       id: 'p2',
