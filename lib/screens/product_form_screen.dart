@@ -87,6 +87,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
         listen: false,
       ).saveProduct(_formData);
       Navigator.of(context).pop();
+      
     } catch (error) {
       await showDialog<void>(
         context: context,
