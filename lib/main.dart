@@ -39,9 +39,11 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           dialogBackgroundColor: Colors.white,
           scaffoldBackgroundColor: Colors.white,
+          
           colorScheme: ColorScheme.fromSwatch().copyWith(
             primary: Colors.purple,
             secondary: Colors.deepOrange,
+            background: Colors.white,
           ),
           fontFamily: 'Lato',
         ),

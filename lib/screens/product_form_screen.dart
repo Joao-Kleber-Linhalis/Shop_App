@@ -68,6 +68,8 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     return isValidUrl && endsWithFile;
   }
 
+
+
   Future<void> _submitForm() async {
     final isValid = _formKey.currentState?.validate() ?? false;
 
@@ -83,7 +85,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
       await Provider.of<ProductList>(
         context,
         listen: false,
-      ).saveProductFromData(_formData);
+      ).saveProduct(_formData);
       Navigator.of(context).pop();
     } catch (error) {
       await showDialog<void>(
