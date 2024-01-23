@@ -4,10 +4,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shop/models/product.dart';
+import 'package:shop/exceptions/http_exception.dart';
+import 'package:shop/util/constants.dart';
 
 class ProductList with ChangeNotifier {
-  final _baseUrl =
-      "https://shop-app-79dd5-default-rtdb.firebaseio.com/products";
   List<Product> _items = [];
 
   List<Product> get items => [..._items];
@@ -20,7 +20,7 @@ class ProductList with ChangeNotifier {
 
   Future<void> loadProducts() async {
     _items.clear();
-    final response = await http.get(Uri.parse('$_baseUrl.json'));
+    final response = await http.get(Uri.parse('${Constants.PRODUCT_BASE_URL}.json'));
     if (response.body == 'null') return; //Não tem produtos na lista
     Map<String, dynamic> data = jsonDecode(response.body);
     data.forEach((productId, productData) {
@@ -58,7 +58,7 @@ class ProductList with ChangeNotifier {
 
   Future<void> addProduct(Product product) async {
     final response = await http.post(
-      Uri.parse('$_baseUrl.json'),
+      Uri.parse('${Constants.PRODUCT_BASE_URL}.json'),
       body: jsonEncode(
         {
           "name": product.name,
@@ -86,9 +86,8 @@ class ProductList with ChangeNotifier {
     int index = _items.indexWhere((p) => p.id == product.id);
 
     if (index >= 0) {
-
       await http.patch(
-        Uri.parse('$_baseUrl/${product.id}.json'),
+        Uri.parse('${Constants.PRODUCT_BASE_URL}/${product.id}.json'),
         body: jsonEncode(
           {
             "name": product.name,
@@ -104,27 +103,27 @@ class ProductList with ChangeNotifier {
     }
   }
 
-  void deleteProduct(Product product) {
-    _items.removeWhere((p) => p == product);
-    notifyListeners();
+  Future<void> deleteProduct(Product product) async {
+    int index = _items.indexWhere((p) => p.id == product.id);
+
+    if (index >= 0) {
+      final product = _items[index];
+
+      _items.remove(product);
+      notifyListeners();
+
+      final response = await http.delete(
+        Uri.parse('${Constants.PRODUCT_BASE_URL}/${product.id}.json'),
+      );
+
+      if (response.statusCode >= 400) {
+        _items.insert(index, product);
+        notifyListeners();
+        throw HttpException(
+          msg: "Não foi possivel excluir o produto",
+          statusCode: response.statusCode,
+        );
+      }
+    }
   }
-
-  // bool _showFavoriteOnly = false;
-
-  // List<Product> get items {
-  //   if(_showFavoriteOnly){
-  //     return _items.where((prod) => prod.isFavorite).toList();
-  //   }
-  //   return [..._items];
-  // }
-
-  // void showFavoriteOnly(){
-  //   _showFavoriteOnly = true;
-  //   notifyListeners();
-  // }
-
-  // void showAll(){
-  //   _showFavoriteOnly = false;
-  //   notifyListeners();
-  // }
 }

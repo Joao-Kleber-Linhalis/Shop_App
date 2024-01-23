@@ -10,8 +10,18 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void _deleteProduct() {
-      Provider.of<ProductList>(context, listen: false).deleteProduct(product);
+    final msg = ScaffoldMessenger.of(context);
+
+    void _deleteProduct() async {
+      try {
+        await Provider.of<ProductList>(context, listen: false)
+            .deleteProduct(product);
+      } catch (error) {
+        msg.showSnackBar(SnackBar(
+          content: Text(error.toString()),
+          duration: const Duration(seconds: 10),
+        ));
+      }
     }
 
     void showConfirmDialog() {
