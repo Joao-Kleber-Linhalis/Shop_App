@@ -25,16 +25,22 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => ProductList(),
+          create: (_) => Auth(),
+        ),
+        ChangeNotifierProxyProvider<Auth, ProductList>(
+          create: (_) => ProductList('', []),
+          update: (ctx, auth, previous) {
+            return ProductList(
+              auth.token ?? '',
+              previous?.items ?? [],
+            );
+          },
         ),
         ChangeNotifierProvider(
           create: (_) => Cart(),
         ),
         ChangeNotifierProvider(
           create: (_) => OrderList(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => Auth(),
         ),
       ],
       child: MaterialApp(
@@ -43,24 +49,21 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           dialogBackgroundColor: Colors.white,
           scaffoldBackgroundColor: Colors.white,
-          
-          
           colorScheme: ColorScheme.fromSwatch().copyWith(
             primary: Colors.purple,
             secondary: Colors.deepOrange,
             background: Colors.white,
-            
           ),
           fontFamily: 'Lato',
         ),
         //home: ProductOverviewScreen(),
         routes: {
-          AppRoutes.AUTH_OR_HOME:(context) => AuthOrHomeScreen(),
+          AppRoutes.AUTH_OR_HOME: (context) => AuthOrHomeScreen(),
           AppRoutes.PRODUCT_DETAIL: (context) => ProductDetailScreen(),
-          AppRoutes.CART:(context) => CartScreen(),
-          AppRoutes.ORDERS:(context) => OrdersScreen(),
-          AppRoutes.PRODUCTS:(context) => ProductScreen(),
-          AppRoutes.PRODUCTS_FORM:(context) => ProductFormScreen(),
+          AppRoutes.CART: (context) => CartScreen(),
+          AppRoutes.ORDERS: (context) => OrdersScreen(),
+          AppRoutes.PRODUCTS: (context) => ProductScreen(),
+          AppRoutes.PRODUCTS_FORM: (context) => ProductFormScreen(),
         },
       ),
     );
