@@ -11,6 +11,7 @@ import 'package:shop/screens/product_detail_screen.dart';
 import 'package:shop/screens/product_form_screen.dart';
 import 'package:shop/screens/product_screen.dart';
 import 'package:shop/util/app_routes.dart';
+import 'package:shop/util/custom_route.dart';
 
 void main() {
   runApp(const MyApp());
@@ -63,6 +64,12 @@ class MyApp extends StatelessWidget {
             background: Colors.white,
           ),
           fontFamily: 'Lato',
+          pageTransitionsTheme: PageTransitionsTheme(
+            builders: {
+              TargetPlatform.android: CustomPageTransitionsBuilder(),
+              TargetPlatform.iOS: CustomPageTransitionsBuilder(),
+            },
+          ),
         ),
         //home: ProductOverviewScreen(),
         routes: {
