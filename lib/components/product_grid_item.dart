@@ -69,7 +69,7 @@ class ProductGridItem extends StatelessWidget {
             child: FadeInImage(
               placeholder: AssetImage("assets/images/product-placeholder.png"),
               image: NetworkImage(product.imageUrl),
-              fit: BoxFit.cover,
+              fit: BoxFit.contain,
             ),
           ),
           onTap: () {

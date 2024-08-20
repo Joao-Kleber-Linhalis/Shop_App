@@ -8,11 +8,12 @@ class AppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authEmail = Provider.of<Auth>(context, listen: false).email;
     return Drawer(
       child: Column(
         children: [
           AppBar(
-            title: Text("Bem Vindo Usuário!"),
+            title: Text("Bem Vindo ${authEmail!.split('@')[0]}"),
             automaticallyImplyLeading: false,
             backgroundColor: Theme.of(context).colorScheme.primary,
           ),
